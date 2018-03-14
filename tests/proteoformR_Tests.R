@@ -7,13 +7,15 @@ library(proteoformR)
 
 TurnoverData <- read.csv("./tests/TurnoverSample.csv")
 
-proteoformR(data = TurnoverData,
+fit <- proteoformR(data = TurnoverData,
             ref = Reference,
             start = Start,
             end = End,
             batch = Replicate,
             vals = Norm_Log2_HtoL_TO,
             lambda = 10)
+
+plot.bpmodel.single(fit)
 '
 SizeExcData <- read.csv("./tests/SizeExcSample.csv")
 SizeExcData = cbind(SizeExcData, Replicate = rep("rep1", dim(SizeExcData)[1]))
