@@ -15,16 +15,16 @@ class BPDetector{
   NumericMatrix values_;
   double lambda_;
 public:
-  BPDetector(StringVector, IntegerVector, NumericMatrix, double);
+  BPDetector(StringVector, NumericMatrix, double);
   bool isNewReference(int);
   void UpdateReference(int);
   void SaveAndReset(int);
   void FindMinimum(int);
-  DataFrame Fit();
+  IntegerVector Fit();
 };
 
 typedef BPDetector<DynamicContainer> PiecewiseConstantDetector;
 
-DataFrame FitBreakPoints(StringVector, IntegerVector, NumericMatrix, double, StringVector);
+IntegerVector FitBreakPoints(StringVector, NumericMatrix, double, StringVector);
 
 #endif

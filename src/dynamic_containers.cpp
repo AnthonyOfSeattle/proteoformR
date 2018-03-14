@@ -10,7 +10,6 @@ DynamicContainer::DynamicContainer(int nsamp){
   saved_error_ = rep(0., nsamp);
   moment_one_ =  rep(0., nsamp);
   moment_two_ =  rep(0., nsamp);
-  break_point_references_ = StringVector(0);
   break_point_positions_ = IntegerVector(0);
   isTerminal = 0;
   last_global_index_ = 0;
@@ -59,19 +58,13 @@ void DynamicContainer::SetLoss(double new_loss){
   path_loss_ = new_loss;
 }
 
-void DynamicContainer::SetBreakPoints(StringVector references, IntegerVector positions){
-  break_point_references_ = references;
+void DynamicContainer::SetBreakPoints(IntegerVector positions){
   break_point_positions_ = positions;
 };
 
-void DynamicContainer::UpdateBreakPoints(std::string reference, int position, int global_index){
-  break_point_references_.push_back(reference);
-  break_point_positions_.push_back(position);
+void DynamicContainer::UpdateBreakPoints(int global_index){
+  break_point_positions_.push_back(global_index);
   last_global_index_ = global_index;
-};
-
-StringVector DynamicContainer::GetBreakPointReferences(){
-  return break_point_references_;
 };
 
 IntegerVector DynamicContainer::GetBreakPointPositions(){

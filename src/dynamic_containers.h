@@ -11,7 +11,6 @@ class DynamicContainer {
   NumericVector saved_error_;
   NumericVector moment_one_;
   NumericVector moment_two_;
-  StringVector break_point_references_;
   IntegerVector break_point_positions_;
   IntegerVector global_bp_indices_;
   int last_global_index_;
@@ -23,9 +22,8 @@ public:
   bool InducesSinglet(int);
   void SaveAndReset();
   void SetLoss(double);
-  void SetBreakPoints(StringVector, IntegerVector);
-  void UpdateBreakPoints(std::string, int, int);
-  StringVector GetBreakPointReferences();
+  void SetBreakPoints(IntegerVector);
+  void UpdateBreakPoints(int);
   IntegerVector GetBreakPointPositions();
 };
 

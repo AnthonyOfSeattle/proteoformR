@@ -6,23 +6,22 @@
 using namespace Rcpp;
 
 // FitBreakPoints
-DataFrame FitBreakPoints(StringVector references, IntegerVector positions, NumericMatrix values, double lambda, StringVector method);
-RcppExport SEXP _proteoformR_FitBreakPoints(SEXP referencesSEXP, SEXP positionsSEXP, SEXP valuesSEXP, SEXP lambdaSEXP, SEXP methodSEXP) {
+IntegerVector FitBreakPoints(StringVector references, NumericMatrix values, double lambda, StringVector method);
+RcppExport SEXP _proteoformR_FitBreakPoints(SEXP referencesSEXP, SEXP valuesSEXP, SEXP lambdaSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< StringVector >::type references(referencesSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type positions(positionsSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type values(valuesSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< StringVector >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(FitBreakPoints(references, positions, values, lambda, method));
+    rcpp_result_gen = Rcpp::wrap(FitBreakPoints(references, values, lambda, method));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_proteoformR_FitBreakPoints", (DL_FUNC) &_proteoformR_FitBreakPoints, 5},
+    {"_proteoformR_FitBreakPoints", (DL_FUNC) &_proteoformR_FitBreakPoints, 4},
     {NULL, NULL, 0}
 };
 

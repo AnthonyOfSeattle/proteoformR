@@ -4,13 +4,11 @@
 using namespace Rcpp;
 
 template <class T>
-BPDetector<T>::BPDetector(StringVector references, 
-                          IntegerVector positions,
+BPDetector<T>::BPDetector(StringVector references,
                           NumericMatrix values, 
                           double lambda){
   // Save values
   references_ = references;
-  positions_ = positions;
   values_ = values;
   lambda_ = lambda;
   
@@ -65,17 +63,15 @@ void BPDetector<T>::FindMinimum(int row_ind){
   // Save the minimum path
   //Rcout << std::endl << minimum_loss << " " << minimum_ind << std::endl;
   saved_values_[row_ind].SetLoss(minimum_loss);
-  saved_values_[row_ind].SetBreakPoints(saved_values_[minimum_ind].GetBreakPointReferences(),
-                                        saved_values_[minimum_ind].GetBreakPointPositions());
+  saved_values_[row_ind].SetBreakPoints(saved_values_[minimum_ind].GetBreakPointPositions());
   
   if (minimum_ind != 0){ 
-    saved_values_[row_ind].UpdateBreakPoints(Rcpp::as< std::string >(references_[minimum_ind]),
-                                             positions_[minimum_ind], minimum_ind);
+    saved_values_[row_ind].UpdateBreakPoints(minimum_ind);
   }
 }
 
 template <class T>
-DataFrame BPDetector<T>::Fit(){
+IntegerVector BPDetector<T>::Fit(){
   for (int row_ind = 1; row_ind <= values_.rows(); row_ind++){ 
     // Reset all scores if we have moved to a new gene
     if (isNewReference(row_ind)){
@@ -89,21 +85,18 @@ DataFrame BPDetector<T>::Fit(){
     FindMinimum(row_ind);
     //break;
   }
-  return DataFrame::create(Named("BP_References") = saved_values_[values_.rows()].GetBreakPointReferences(),
-                           Named("BP_Positions") = saved_values_[values_.rows()].GetBreakPointPositions());
+  return saved_values_[values_.rows()].GetBreakPointPositions();
 }
 
 // [[Rcpp::export]]
 
-DataFrame FitBreakPoints(StringVector references, 
-                         IntegerVector positions,
+IntegerVector FitBreakPoints(StringVector references,
                          NumericMatrix values,
                          double lambda,
                          StringVector method = "constant"){
   std::string method_arg = Rcpp::as< std::string >(method[0]);
-  DataFrame model;
-  PiecewiseConstantDetector detector(references, 
-                                     positions,
+  IntegerVector model;
+  PiecewiseConstantDetector detector(references,
                                      values,
                                      lambda);
   
