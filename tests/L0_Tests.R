@@ -33,7 +33,7 @@ CleanedData <- TMData %>%
   mutate(meltPoint = scale(meltPoint)) %>%
   group_by(protein_name, replicate, start_pos) %>%
   summarise(med = median(meltPoint)) %>%
-  spread(replicate, med)
+  spread("replicate", "med")
 CleanedData <- CleanedData[with(CleanedData, order(protein_name, start_pos)),]
 
 fit <- FitBreakPoints(reference = CleanedData$protein_name,
