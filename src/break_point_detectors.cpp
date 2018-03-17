@@ -99,8 +99,6 @@ IntegerVector FitBreakPoints(StringVector references,
   PiecewiseConstantDetector detector(references,
                                      values,
                                      lambda);
-  
   model = detector.Fit();
-  
   return model;
 }
