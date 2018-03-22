@@ -19,9 +19,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// BuildModel
+NumericVector BuildModel(StringVector references, NumericMatrix values, IntegerVector breakpoints, StringVector method);
+RcppExport SEXP _proteoformR_BuildModel(SEXP referencesSEXP, SEXP valuesSEXP, SEXP breakpointsSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< StringVector >::type references(referencesSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type values(valuesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type breakpoints(breakpointsSEXP);
+    Rcpp::traits::input_parameter< StringVector >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(BuildModel(references, values, breakpoints, method));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_proteoformR_FitBreakPoints", (DL_FUNC) &_proteoformR_FitBreakPoints, 4},
+    {"_proteoformR_BuildModel", (DL_FUNC) &_proteoformR_BuildModel, 4},
     {NULL, NULL, 0}
 };
 

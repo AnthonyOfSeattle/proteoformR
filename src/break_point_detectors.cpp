@@ -91,9 +91,9 @@ IntegerVector BPDetector<T>::Fit(){
 // [[Rcpp::export]]
 
 IntegerVector FitBreakPoints(StringVector references,
-                         NumericMatrix values,
-                         double lambda,
-                         StringVector method = "constant"){
+                             NumericMatrix values,
+                             double lambda,
+                             StringVector method = "constant"){
   std::string method_arg = Rcpp::as< std::string >(method[0]);
   IntegerVector model;
   PiecewiseConstantDetector detector(references,
@@ -101,4 +101,55 @@ IntegerVector FitBreakPoints(StringVector references,
                                      lambda);
   model = detector.Fit();
   return model;
+}
+
+// [[Rcpp::export]]
+
+NumericVector BuildModel(StringVector references,
+                         NumericMatrix values,
+                         IntegerVector breakpoints,
+                         StringVector method = "constant"){
+  
+  // Add container for model
+  NumericVector model = rep(0., values.rows());
+  
+  // A single container will hold all of our info
+  DynamicContainer analytic_container(values.cols());
+  
+  //int last_start = 0; // Keep track of last start
+  std::string prev_ref = Rcpp::as< std::string >(references(0));
+  std::string cur_ref;
+  
+  // Add a single breakpoint to cheat the system
+  breakpoints.push_back(values.rows());
+  
+  // Keep track of model track start
+  int start_row = 0;
+  
+  for (int row_ind = 0; row_ind < values.rows(); row_ind++){
+    cur_ref = Rcpp::as< std::string >(references(row_ind));
+    if ( (cur_ref == prev_ref) &
+         (breakpoints[0] != row_ind) ){
+      analytic_container.UpdateStats( values(row_ind, _ ) );
+    } else {
+      if (breakpoints[0] == row_ind){
+        breakpoints.erase(0);
+      } else if (cur_ref != prev_ref){
+        prev_ref = cur_ref;
+      }
+      NumericVector to_add = analytic_container.GetModel();
+      for (int i = 0; i < to_add.length(); i++){
+        model[start_row + i] = to_add[i];
+      }
+      start_row = row_ind;
+      analytic_container.reset();
+      analytic_container.UpdateStats( values(row_ind, _ ) );
+    }
+  }
+  NumericVector to_add = analytic_container.GetModel();
+  for (int i = 0; i < to_add.length(); i++){
+    model[start_row + i] = to_add[i];
+  }
+  return model;
+  
 }

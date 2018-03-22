@@ -4,12 +4,25 @@
 using namespace Rcpp;
 
 DynamicContainer::DynamicContainer(int nsamp){
-  //cur_n_ = 0;
+  total_n_ = 0;
   path_loss_ = 0.;
   per_sample_n_ = rep(0., nsamp);
   saved_error_ = rep(0., nsamp);
   moment_one_ =  rep(0., nsamp);
   moment_two_ =  rep(0., nsamp);
+  break_point_positions_ = IntegerVector(0);
+  isTerminal = 0;
+  last_global_index_ = 0;
+  nsamp_ = nsamp;
+}
+
+void DynamicContainer::reset(){
+  total_n_ = 0;
+  path_loss_ = 0.;
+  per_sample_n_ = rep(0., nsamp_);
+  saved_error_ = rep(0., nsamp_);
+  moment_one_ =  rep(0., nsamp_);
+  moment_two_ =  rep(0., nsamp_);
   break_point_positions_ = IntegerVector(0);
   isTerminal = 0;
   last_global_index_ = 0;
@@ -22,6 +35,7 @@ void DynamicContainer::UpdateStats(NumericMatrix::Row values){
   per_sample_n_ = ifelse(!(is_na(values)), per_sample_n_ + 1., per_sample_n_);
   moment_one_ = ifelse(!(is_na(values)), moment_one_ + values, moment_one_);
   moment_two_ = ifelse(!(is_na(values)), moment_two_ +  pow(values , 2), moment_two_); 
+  total_n_ += 1;
 }
 
 double DynamicContainer::CalculateError(){
@@ -70,6 +84,12 @@ void DynamicContainer::UpdateBreakPoints(int global_index){
 IntegerVector DynamicContainer::GetBreakPointPositions(){
   return break_point_positions_;
 };
+
+NumericVector DynamicContainer::GetModel(){
+  double total_n = sum(per_sample_n_);
+  double absolute_mean = sum(moment_one_/total_n);
+  return rep(absolute_mean, total_n_);
+}
 
 //double DynamicContainer::CalculateError(){
 //  NumericVector stable_moment_2 = log(moment_two_);

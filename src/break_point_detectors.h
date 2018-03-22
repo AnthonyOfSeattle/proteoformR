@@ -26,5 +26,6 @@ public:
 typedef BPDetector<DynamicContainer> PiecewiseConstantDetector;
 
 IntegerVector FitBreakPoints(StringVector, NumericMatrix, double, StringVector);
+NumericVector BuildModel(StringVector, NumericMatrix, IntegerVector, StringVector);
 
 #endif
