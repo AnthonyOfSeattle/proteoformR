@@ -5,3 +5,7 @@ FitBreakPoints <- function(references, values, lambda, method = "constant") {
     .Call(`_proteoformR_FitBreakPoints`, references, values, lambda, method)
 }
 
+BuildModel <- function(references, values, breakpoints, method = "constant") {
+    .Call(`_proteoformR_BuildModel`, references, values, breakpoints, method)
+}
+
