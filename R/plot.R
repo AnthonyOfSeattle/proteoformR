@@ -13,13 +13,14 @@ plot.bpmodel.single <- function(model, ref = NULL, dir = NULL){
   plt = ggplot()
   
   # Add model first so it is behind
-  filtered_model = model$ModelFit %>% filter(ref == plot_ref)
-  to_plot = data.frame(Position = c(filtered_model$start, filtered_model$end),
-                       Value = rep(filtered_model$fit, 2))
-  plt = plt + geom_line(data = to_plot,
-                        aes( x = Position,
-                             y = Value),
+  filtered_model = model$ModelFit %>% 
+    filter(ref == plot_ref) %>%
+    mutate(pos = (start+end)/2 )
+  plt = plt + geom_line(data = filtered_model,
+                        aes( x = pos,
+                             y = fit),
                         lwd = 2)
+
   # Add points on top
   plt = plt + geom_segment(data=tidy_input, aes(x = start,
                                            xend = end,
@@ -27,7 +28,9 @@ plot.bpmodel.single <- function(model, ref = NULL, dir = NULL){
                                            yend = vals,
                                            color = batch),
                            lwd = 2)
+  
   plt = plt + ggtitle(plot_ref) + theme_bw() + scale_colour_manual(values=cbPalette)
+  plt = plt + xlab("Position") + ylab("Value")
   
   if (is.null(dir)){
     print(plt)
