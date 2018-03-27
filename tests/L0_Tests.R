@@ -21,7 +21,6 @@ CleanedData <- TurnoverData %>%
 CleanedData <- CleanedData[with(CleanedData, order(Reference, Start)),]
 
 fit <- FitBreakPoints(reference = CleanedData$Reference,
-                      pos = CleanedData$Start,
                       val = as.matrix(CleanedData[,-(1:2)]),
                       lambda = 8)
 fit
