@@ -29,10 +29,33 @@ plot.bpmodel.single <- function(model, ref = NULL, dir = NULL){
                                            color = batch),
                            lwd = 2)
   
-  plt = plt + ggtitle(plot_ref) + theme_bw() + scale_colour_manual(values=cbPalette)
+  plt = plt + ggtitle(plot_ref) + theme_bw() + scale_colour_manual("Sample",
+                                                                   values=cbPalette)
   plt = plt + xlab("Position") + ylab("Value")
+  plt = plt + theme(axis.text=element_text(size=14),
+                    axis.title=element_text(size=16,face="bold"),
+                    legend.text=element_text(size = 14),
+                    legend.title=element_text(size = 16))
   
   if (is.null(dir)){
     print(plt)
+  } else {
+    ggsave(filename= paste(dir, "/",
+                           plot_ref, ".png",
+                           sep = ""),
+           plot = plt)
+  }
+}
+
+plot.bpmodel <- function(model, ref = "All", dir = getwd(), only.calls = TRUE){
+  if (ref == "All") {
+    if(only.calls){
+      ref = unique(model$BreakPoints$ref)
+    } else { 
+        ref = unique(model$Input$ref)
+        }
+  }
+  for (r in ref){
+    plot.bpmodel.single(model, ref = r, dir = dir)
   }
 }
