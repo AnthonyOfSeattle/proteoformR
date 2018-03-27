@@ -46,7 +46,6 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     cleaned_data["start"] = 1:dim(data)[1]
     cleaned_data["end"] = 1:dim(data)[1]
   }
-  
   # Do final data cleaning
   cleaned_data = cleaned_data %>% 
     group_by(ref, start, end, batch) %>%
@@ -57,12 +56,21 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     arrange(ref, start, end) %>%
     filter( sum(!(is.na(.[,-(1:3)]))) > 0 )
 
+
   model <- list("Input" = cleaned_data)
   
   if (method == "PL_L0"){
-    breakpoints = FitBreakPoints(reference = cleaned_data$ref,
-                                 val = as.matrix(cleaned_data[,-(1:3)]),
-                                 lambda)
+    startpoint = 0
+    breakpoints = c()
+    for (r in unique(cleaned_data$ref)){
+      data.subset = cleaned_data %>% 
+        filter(ref == r)
+      breakpoint.subset = FitBreakPoints(reference = data.subset$ref,
+                                         val = as.matrix(data.subset[,-(1:3)]),
+                                         lambda)
+      breakpoints = c(breakpoints, breakpoint.subset + startpoint) 
+      startpoint = startpoint + dim(data.subset)[1]
+    }
     fit = BuildModel(reference = cleaned_data$ref,
                      val = as.matrix(cleaned_data[,-(1:3)]),
                      breakpoints = breakpoints)
