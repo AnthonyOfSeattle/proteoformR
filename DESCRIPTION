@@ -13,3 +13,4 @@ Depends:
   ggplot2
 Imports: Rcpp (>= 0.12.10)
 LinkingTo: Rcpp
+RoxygenNote: 6.0.1
