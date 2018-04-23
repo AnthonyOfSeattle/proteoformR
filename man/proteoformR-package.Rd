@@ -3,32 +3,20 @@
 \alias{proteoformR}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Identify changepoints in peptide properties
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  Solves an L0 penalized changepoint model for each protein accross whole proteome mass spectrometry datasets.
+  Homogenizes the modeling process by Z-scoring measured values, thus allowing this tool to be used with theoretically
+  any continuously valued measurement. Includes ability to specify batch values, such as sample, to increase power.
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  Coming soon
 }
 \author{
-Your Name, email optional.
-
-Maintainer: Your Name <your@email.com>
+Author, Maintainer: Anthony Valente <valenta4@uw.edu>
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  Coming soon
 }
 \keyword{ package }
-\seealso{
-  Optional links to other man pages
-}
-\examples{
-  \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
-  }
-}
