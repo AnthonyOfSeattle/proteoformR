@@ -1,7 +1,6 @@
 useDynLib(proteoformR, .registration=TRUE)
 
 # Exports
-#exportPattern("^[[:alpha:]]+")
 exportPattern("^[^\\.]")
 
 # R essentials
