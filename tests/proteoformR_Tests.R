@@ -1,8 +1,6 @@
 #########################################
 # Tests of actual proeteoformR function #
 #########################################
-library(dplyr)
-library(tidyr)
 library(proteoformR)
 
 TurnoverData <- read.csv("./tests/TurnoverSample.csv")
