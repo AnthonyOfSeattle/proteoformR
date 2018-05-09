@@ -1,3 +1,13 @@
 useDynLib(proteoformR, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
+
+# tidy
+importFrom(dplyr, "%>%")
+importFrom(dplyr, group_by)
+importFrom(dplyr, summarise)
+importFrom(dplyr, mutate)
+importFrom(dplyr, arrange)
+importFrom(dplyr, filter)
+importFrom(tidyr, spread)
+importFrom(tidyr, gather)
