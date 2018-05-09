@@ -4,18 +4,17 @@
 \alias{plot.bpmodel}
 \title{View all or a subset of breakpoint models}
 \usage{
-\method{plot}{bpmodel}(model, ref = "All", dir = getwd(),
-  only.calls = TRUE)
+\method{plot}{bpmodel}(model, ref = NULL, dir = NULL, only.calls = FALSE)
 }
 \arguments{
 \item{model}{S3 object supplied by running proteoformR}
 
-\item{ref}{A vector of references to build plots for. If the default value is used, "All",
-then plots will be generated for references with breakpoint calls (if only.calls == TRUE), or all references in the set (if only.calls == TRUE).}
+\item{ref}{A vector of references to build plots for. The list of references (only.calls == FALSE) or only those with breakpoint calls (only.calls == TRUE) 
+will be passed unfiltered if ref is set to "All", and will be filtered for only the first if ref is NULL.}
 
-\item{dir}{Directory to save plot if supplied, but NULL specifies print. Defaults to the working directory.}
+\item{dir}{Directory to save plot if supplied, but NULL specifies print.}
 
-\item{only.calls}{Whether to plot only references with breakpoints called if only.calls == TRUE}
+\item{only.calls}{Whether to plot only references with breakpoints called if only.calls == TRUE.}
 }
 \description{
 \code{plot.bpmodel} builds ggplot2 breakpoint figures for criticism. 

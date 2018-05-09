@@ -5,14 +5,14 @@
 #' Uses a color safe pallate for now, which can plot up to 8 samples.
 #' 
 #' @param model S3 object supplied by running proteoformR
-#' @param ref A vector of references to build plots for. If the default value is used, "All",
-#' then plots will be generated for references with breakpoint calls (if only.calls == TRUE), or all references in the set (if only.calls == TRUE).
-#' @param dir Directory to save plot if supplied, but NULL specifies print. Defaults to the working directory.
-#' @param only.calls Whether to plot only references with breakpoints called if only.calls == TRUE
+#' @param ref A vector of references to build plots for. The list of references (only.calls == FALSE) or only those with breakpoint calls (only.calls == TRUE) 
+#' will be passed unfiltered if ref is set to "All", and will be filtered for only the first if ref is NULL.
+#' @param dir Directory to save plot if supplied, but NULL specifies print.
+#' @param only.calls Whether to plot only references with breakpoints called if only.calls == TRUE.
 #' 
 #' @seealso \code{\link{proteoformR}}
 
-plot.bpmodel <- function(model, ref = NULL, dir = NULL, only.calls = TRUE){
+plot.bpmodel <- function(model, ref = NULL, dir = NULL, only.calls = FALSE){
   if (only.calls){
     ref_list = unique(model$BreakPoints$ref)
   } else { 
