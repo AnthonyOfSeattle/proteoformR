@@ -1,5 +1,9 @@
 useDynLib(proteoformR, .registration=TRUE)
+
+# Exports
 exportPattern("^[[:alpha:]]+")
+
+# R essentials
 importFrom(Rcpp, evalCpp)
 
 # tidy
@@ -11,3 +15,17 @@ importFrom(dplyr, arrange)
 importFrom(dplyr, filter)
 importFrom(tidyr, spread)
 importFrom(tidyr, gather)
+
+# plotting
+importFrom(ggplot2, ggplot)
+importFrom(ggplot2, aes)
+importFrom(ggplot2, element_text)
+importFrom(ggplot2, geom_segment)
+importFrom(ggplot2, geom_line)
+importFrom(ggplot2, xlab)
+importFrom(ggplot2, ylab)
+importFrom(ggplot2, theme)
+importFrom(ggplot2, theme_bw)
+importFrom(ggplot2, ggtitle)
+importFrom(ggplot2, scale_colour_manual)
+importFrom(ggplot2, ggsave)
