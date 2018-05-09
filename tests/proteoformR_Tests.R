@@ -13,7 +13,7 @@ fit <- proteoformR(data = TurnoverData,
             vals = Norm_Log2_HtoL_TO,
             lambda = 8.5)
 fit
-plot.bpmodel.single(fit, "YLR167W")
+plot(fit, "YLR167W")
 
 SizeExcData <- read.csv("./tests/SizeExcSample.csv")
 SizeExcData = cbind(SizeExcData, Replicate = rep("rep1", dim(SizeExcData)[1]))
@@ -26,7 +26,7 @@ fit2 <- proteoformR(data = SizeExcData,
             vals = LogInequality,
             lambda = 8.5)
 fit2
-plot.bpmodel.single(fit2)
+plot(fit2)
 
 TMData <- read.csv("./tests/TMSamples.csv")
 
@@ -38,5 +38,5 @@ fit3 <- proteoformR(data = TMData,
             vals = meltPoint,
             lambda = 8.5)
 fit3
-plot.bpmodel.single(fit3, "YCR030C")
+plot(fit3, "YCR030C")
 
