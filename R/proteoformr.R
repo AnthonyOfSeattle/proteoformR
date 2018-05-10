@@ -19,28 +19,41 @@
 proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch = NULL,
                         lambda = 10, method = "PL_L0"){
   
-  # Add supplied columns
+  # In order to call breakpoints we really only need sequential values
+  # so the only required arguments are: data, vals
+  if (missing(data) | missing(vals)){
+    stop("Please supply both data and a reference to the values column")
+  }
+  
+  # Arguments don't need to be supplied as string "arg"
+  # can be supplied: arg
   supplied_args <- c("vals" = as.character(substitute(vals)),
                      "ref" = as.character(substitute(ref)),
                      "start" = as.character(substitute(start)),
                      "end" = as.character(substitute(end)),
                      "batch" = as.character(substitute(batch)))
   
-  # Parse the input dataframe and add defaults if necessary
+  # Builds a sub data frame with columns from supplied args
+  # any missing values from supplied args are inputed with
+  # default values.
   parsed_data = data %>% 
     .parse.input(supplied_args)
   
-  # Average duplicated data
+  # Duplicated data which has the same reference, positioning, and batch
+  # is averaged to avoid confusion later
   averaged_data = parsed_data %>%
     group_by(ref, start, end, batch) %>%
     summarise(vals = mean(vals, na.rm = TRUE))
   
-  # Scale data
+  # Data needs to be scaled to make sure penalty terms
+  # can be applied uniformly
   scaled_data = averaged_data %>%
     group_by(ref) %>%
     mutate(vals = scale(vals))
     
-  # Spread values based on batch
+  # The breakpoint detection treats each batch as seperate,
+  # and it is much easier to work with if we input data where
+  # each column is a batch
   spread_data = scaled_data %>%
     spread(batch, vals) %>%
     arrange(ref, start, end) %>%
