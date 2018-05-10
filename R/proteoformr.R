@@ -50,7 +50,7 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   scaled_data = averaged_data %>%
     group_by(ref) %>%
     mutate(vals = scale(vals))
-    
+  
   # The breakpoint detection treats each batch as seperate,
   # and it is much easier to work with if we input data where
   # each column is a batch
@@ -122,7 +122,7 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   } else {
     new_data = .data %>% 
       mutate(start = 1:dim(input)[1]) %>%
-      mutate(end = 1:dim(data)[1])
+      mutate(end = 1:dim(input)[1])
   }
   return(new_data)
 }
