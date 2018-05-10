@@ -1,3 +1,23 @@
 useDynLib(proteoformR, .registration=TRUE)
-exportPattern("^[[:alpha:]]+")
+
+# Exports
+exportPattern("^[^\\.]")
+
+# R essentials
 importFrom(Rcpp, evalCpp)
+
+# tidy
+importFrom(dplyr, 
+           "%>%",
+           select,
+           group_by,
+           summarise,
+           mutate,
+           arrange,
+           filter)
+importFrom(tidyr,
+           spread,
+           gather)
+
+# plotting
+import(ggplot2)
