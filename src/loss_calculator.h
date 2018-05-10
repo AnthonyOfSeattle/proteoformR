@@ -18,12 +18,13 @@ using namespace Rcpp;
  *     double error = c.GetLoss;
  */
 class LossCalculator{
+  double saved_loss_;
   NumericVector per_sample_n_;
   NumericVector moment_one_;
   NumericVector moment_two_;
 public:
   LossCalculator(int);
-  void Update(NumericVector);
+  void Update(NumericMatrix::Row);
   double GetLoss();
 };
 

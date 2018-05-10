@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include "utils.h"
 #include "loss_calculator.h"
 using namespace Rcpp;
 
@@ -20,7 +19,7 @@ LossCalculator::LossCalculator(int nsamples){
  * sufficient statistics and only evaluate the loss when
  * it is needed.
  */
-void LossCalculator::Update(NumericVector values){
+void LossCalculator::Update(NumericMatrix::Row values){
   per_sample_n_ = ifelse(!(is_na(values)), per_sample_n_ + 1., per_sample_n_);
   moment_one_ = ifelse(!(is_na(values)), moment_one_ + values, moment_one_);
   moment_two_ = ifelse(!(is_na(values)), moment_two_ +  pow(values , 2), moment_two_); 
@@ -34,5 +33,5 @@ double LossCalculator::GetLoss(){
   NumericVector current_error = ifelse(!(per_sample_n_ == 0),
                                        moment_two_ - pow(moment_one_, 2)/per_sample_n_,
                                        0.);
-  return(sum(current_error));
+  return sum(current_error);
 }
