@@ -4,10 +4,14 @@ using namespace Rcpp;
 
 
 ObjectiveCalculator::ObjectiveCalculator(int nsamples,
-                                         int buffer_size){
+                                         double penalty){
   objective_ = 0.;
   loss_ = new LossCalculator(nsamples);
-  buffer_counter_ = buffer_size;
+  penalty_ = penalty;
+}
+
+ObjectiveCalculator::~ObjectiveCalculator(){
+  delete loss_;
 }
 
 void ObjectiveCalculator::SetObjective(double value){
@@ -20,5 +24,5 @@ void ObjectiveCalculator::Update(NumericMatrix::Row value){
 
 double ObjectiveCalculator::GetObjective(){
   double cur_loss = loss_ -> GetLoss();
-  return objective_ + cur_loss;
+  return objective_ + cur_loss + penalty_;
 }
