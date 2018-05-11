@@ -25,16 +25,14 @@ int ErrorReport(std::string name,
 // [[Rcpp::export]]
 
 int test_LossCalculator() {
-  LogicalVector passing(2);
+  LogicalVector passing(4);
   try {
     
     // Test 0: Fully specified matrix
     NumericMatrix xx(3,3);
-    Rcout << xx << std::endl;
     for (int i  = 0. ; i < 3 ; i++){
       xx(i, _) = rep((double) i, 3);
     }
-    Rcout << xx << std::endl;
     
     LossCalculator calc1(3);
     for (int i = 0; i < 3; i++){
@@ -44,14 +42,12 @@ int test_LossCalculator() {
     if (std::abs(calc1.GetLoss() - 6) < 1e-5){
       passing[0] = TRUE;
     }
-    Rcout << calc1.GetLoss() << std::endl;
     
     
     // Test 1: Missing values
     for (int i = 0; i < 3; i++){
       xx(i,i) = NA_REAL;
     }
-    Rcout << xx << std::endl;
     
     LossCalculator calc2(3);
     for (int i = 0; i < 3; i++){
@@ -61,7 +57,37 @@ int test_LossCalculator() {
     if (std::abs(calc2.GetLoss() - 3) < 1e-5){
       passing[1] = TRUE;
     }
-    Rcout << calc2.GetLoss() << std::endl;
+    
+    // Test2: Column missing
+    for (int i  = 0. ; i < 3 ; i++){
+      xx(i, _) = rep((double) i, 3);
+      xx(i,2) = NA_REAL;
+    }
+    
+    LossCalculator calc3(3);
+    for (int i = 0; i < 3; i++){
+      calc3.Update(xx(i,_));
+    }
+    
+    if (std::abs(calc3.GetLoss() - 4) < 1e-5){
+      passing[2] = TRUE;
+    }
+    
+    
+    // Test2: All missing
+    for (int i  = 0. ; i < 3 ; i++){
+      xx(i, _) = rep(NA_REAL, 3);
+      xx(i,2) = NA_REAL;
+    }
+    
+    LossCalculator calc4(3);
+    for (int i = 0; i < 3; i++){
+      calc4.Update(xx(i,_));
+    }
+    
+    if (calc4.GetLoss() == 0){
+      passing[3] = TRUE;
+    }
     
     return ErrorReport("LossCalculator", passing);
   }
