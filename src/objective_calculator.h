@@ -7,7 +7,6 @@ using namespace Rcpp;
 
 class ObjectiveCalculator{
   double objective_;
-  int buffer_counter_;
   LossCalculator* loss_;
   double penalty_;
 public:
