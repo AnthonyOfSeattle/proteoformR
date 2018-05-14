@@ -13,6 +13,7 @@ print("Testing L0 type detectors of turnover data:")
 
 TurnoverData <- read.csv("./tests/TurnoverSample.csv")
 CleanedData <- TurnoverData %>%
+  filter(Reference == "YLR167W") %>%
   select(Reference, Replicate, Start, Norm_Log2_HtoL_TO) %>%
   mutate(Norm_Log2_HtoL_TO = scale(Norm_Log2_HtoL_TO)) %>%
   group_by(Reference, Replicate, Start) %>%
@@ -25,8 +26,13 @@ fit <- FitBreakPoints(reference = CleanedData$Reference,
                       lambda = 8)
 fit
 
+fit2 <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
+                          lambda = 8)
+fit2
+
 TMData <- read.csv("./tests/TMSamples.csv")
 CleanedData <- TMData %>%
+  filter(protein_name == "YCR030C") %>%
   select(protein_name, replicate, start_pos, meltPoint) %>%
   group_by(protein_name) %>%
   mutate(meltPoint = scale(meltPoint)) %>%
@@ -36,7 +42,10 @@ CleanedData <- TMData %>%
 CleanedData <- CleanedData[with(CleanedData, order(protein_name, start_pos)),]
 
 fit <- FitBreakPoints(reference = CleanedData$protein_name,
-                      pos = CleanedData$start_pos,
                       val = as.matrix(CleanedData[,-(1:2)]),
                       lambda = 8)
 fit
+
+fit2 <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
+                          lambda = 8)
+fit2
