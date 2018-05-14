@@ -20,13 +20,18 @@ IntegerVector DetectBreakpoints(NumericMatrix values,
   print(DetectBreakpoints(continuous, lambda = 7))
 
 # One breakpoint
-continuous = cbind(matrix(c(rnorm(100,-.5, .5), rnorm(100,0.5, .5)), ncol = 1))
+continuous = matrix(c(rnorm(100,-.5, .5), rnorm(100,0.5, .5)), ncol = 1)
 print(DetectBreakpoints(continuous, lambda = 7))
 
 # Two breakpoint
 continuous = cbind(matrix(c(rnorm(100,-.5, .5), 
                             rnorm(100,0.5, .5), 
                             rnorm(100,-0.5, .5)), ncol = 1))
+print(DetectBreakpoints(continuous, lambda = 7))
+
+# Outlier
+continuous = cbind(rnorm(100,0, .5), rnorm(100,0, .5))
+continuous[50, ] = continuous[50,] + 3
 print(DetectBreakpoints(continuous, lambda = 7))
 
 */
