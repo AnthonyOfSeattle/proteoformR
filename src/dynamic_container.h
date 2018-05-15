@@ -18,8 +18,8 @@ public:
   ~DynamicContainer();
   void Update(NumericMatrix::Row);
   void HoldOut(NumericMatrix::Row);
-  void GetObjective();
-  void SaveObjective();
+  void SaveObjective(double);
+  double GetObjective();
   IntegerVector GetBreakpoints();
   IntegerVector GetHold();
 };
