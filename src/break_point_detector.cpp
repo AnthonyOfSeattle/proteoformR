@@ -5,36 +5,61 @@ using namespace Rcpp;
 
 BreakpointDetector::BreakpointDetector(NumericMatrix values, double lambda){
   values_ = values;
-  
+  penalty_ = lambda;
   // Only the first dynamic container in the list it initialize,
   // Because each new container will be copy constructed. 
-  lookup_table_.push_back( 
-    new DynamicContainer( values.cols(), lambda ) 
-  );
-  
   // The initial container must have an objective set to -lambda
   // This is the only "breakpoint" in the lookup table which
   // we do not want to penalize.
-  lookup_table_[0]->SaveObjective(-lambda);
+  DynamicContainer *temp = new DynamicContainer(values.cols(), lambda, -lambda);
+  temp -> SetPos(-1);
+  lookup_table_.push_back(temp);
 }
 
 void BreakpointDetector::FindMinimum(int row_ind){
-  // TODO: copy construct from last and then just go backwards.
-  
+  Rcout << "Entering loop " << row_ind << std::endl;
+  // Save the state of the previous postion
+  // by using in a copy contructor.
+  DynamicContainer *checkpoint =
+    new DynamicContainer(
+        *(lookup_table_.back() -> GetLastBreak())
+  );
+  checkpoint -> SetPos(row_ind);
+
   double minimum_objective = R_PosInf;
   double cur_objective;
   int minimum_ind;
-  
-  // Iterate until the position right before current
-  // This final position will be treated diffently
-  for (int back_track = 0; back_track < row_ind - 1; back_track++){
-    lookup_table_[back_track]->Update( values_(row_ind - 1, _ ) );
-    cur_objective = lookup_table_[back_track]->GetObjective();
+  Rcout << "Enter loop" << std::endl;
+  for (int it = 0;
+       it != lookup_table_.size();
+       it++){
+    lookup_table_[it] -> Update( values_(row_ind - 1, _ ) );
+    cur_objective = lookup_table_[it] -> GetObjective();
+    Rcout << lookup_table_[it] -> GetPos() << ": " << cur_objective << std::endl;
     if ( (cur_objective < minimum_objective) ){
       minimum_objective = cur_objective;
-      minimum_ind = back_track;
+      minimum_ind = it;
     }
   }
+  Rcout << "Exit loop" << std::endl;
+  
+  if (minimum_ind == lookup_table_.size() - 1 ){
+    Rcout << "Potential outlier" << std::endl;
+    checkpoint -> Hold();
+    Rcout << checkpoint -> GetObjective() << std::endl;
+    lookup_table_.push_back(checkpoint);
+    Rcout << "Handled outlier" << std::endl;
+  }
+  
+  DynamicContainer *temp = new DynamicContainer( *(lookup_table_[minimum_ind]) );
+  temp -> SetPos(row_ind);
+  temp -> Reset();
+  Rcout << "Temp stats" << std::endl;
+  Rcout << temp -> GetObjective() << std::endl;
+  Rcout << temp -> GetLastBreak() -> GetPos() << std::endl;
+  Rcout << temp -> isHeld() << std::endl;
+  lookup_table_.push_back(temp);
+  Rcout << "<<<<<<<<>>>>>>>>>" << std::endl;
 }
 
 IntegerVector BreakpointDetector::Fit(){
@@ -43,52 +68,3 @@ IntegerVector BreakpointDetector::Fit(){
   }
   return IntegerVector::create(1);
 }
-
-
-// BreakpointDetector::BreakpointDetector(NumericMatrix values, double lambda){
-//   values_ = values;
-//   for (int ind = 0; ind < values_.rows() + 1; ind++){
-//     lookup_table_.push_back( 
-//       new ObjectiveCalculator( values.cols(), lambda ) 
-//     );
-//     breakpoint_positions_.push_back(
-//       IntegerVector(0)
-//     );
-//   }
-//   
-//   // Initialize container 0 to -lambda
-//   lookup_table_[0]->SetObjective(-lambda);
-// }
-// 
-// BreakpointDetector::~BreakpointDetector(){
-//   for (int ind = 0; ind < lookup_table_.size(); ind++){
-//     delete lookup_table_[ind];
-//   }
-// }
-// 
-// void BreakpointDetector::FindMinimum(int row_ind){
-//   double minimum_objective = R_PosInf;
-//   double cur_objective;
-//   int minimum_ind;
-//   for (int back_track = 0; back_track < row_ind; back_track++){
-//     lookup_table_[back_track]->Update( values_(row_ind - 1, _ ) );
-//     cur_objective = lookup_table_[back_track]->GetObjective();
-//     if ( (cur_objective < minimum_objective) ){
-//       minimum_objective = cur_objective;
-//       minimum_ind = back_track;
-//     }
-//   }
-//   lookup_table_[row_ind]->SetObjective(minimum_objective);
-//   breakpoint_positions_[row_ind] = breakpoint_positions_[minimum_ind];
-// 
-//   if (minimum_ind != 0){
-//     breakpoint_positions_[row_ind].push_back(minimum_ind);
-//   }
-// }
-// 
-// IntegerVector BreakpointDetector::Fit(){
-//   for (int row_ind = 1; row_ind <= values_.rows(); row_ind++){ 
-//     FindMinimum(row_ind);
-//   }
-//   return breakpoint_positions_[values_.rows()];
-// }
