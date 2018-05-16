@@ -45,16 +45,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_LossCalculator
-int test_LossCalculator();
-RcppExport SEXP _proteoformR_test_LossCalculator() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_LossCalculator());
-    return rcpp_result_gen;
-END_RCPP
-}
 // test_ObjectiveCalculator
 int test_ObjectiveCalculator();
 RcppExport SEXP _proteoformR_test_ObjectiveCalculator() {
@@ -70,7 +60,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_proteoformR_FitBreakPoints", (DL_FUNC) &_proteoformR_FitBreakPoints, 4},
     {"_proteoformR_BuildModel", (DL_FUNC) &_proteoformR_BuildModel, 4},
     {"_proteoformR_DetectBreakpoints", (DL_FUNC) &_proteoformR_DetectBreakpoints, 2},
-    {"_proteoformR_test_LossCalculator", (DL_FUNC) &_proteoformR_test_LossCalculator, 0},
     {"_proteoformR_test_ObjectiveCalculator", (DL_FUNC) &_proteoformR_test_ObjectiveCalculator, 0},
     {NULL, NULL, 0}
 };

@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include "loss_calculator.h"
 #include "objective_calculator.h"
 using namespace Rcpp;
 
@@ -46,61 +45,9 @@ NumericMatrix MakeMatrix(int type){
 
 // [[Rcpp::export]]
 
-int test_LossCalculator() {
-  NumericMatrix xx;
-  LogicalVector passing(4);
-  try {
-    
-    LossCalculator calc0(3);
-    xx = MakeMatrix(0);
-    for (int i = 0; i < 3; i++){
-      calc0.Update(xx(i,_));
-    }
-    if (std::abs(calc0.GetLoss() - 6) < 1e-5){
-      passing[0] = TRUE;
-    }
-    
-    
-    LossCalculator calc1(3);
-    xx = MakeMatrix(1);
-    for (int i = 0; i < 3; i++){
-      calc1.Update(xx(i,_));
-    }
-    if (std::abs(calc1.GetLoss() - 3) < 1e-5){
-      passing[1] = TRUE;
-    }
-    
-    LossCalculator calc2(3);
-    xx = MakeMatrix(2);
-    for (int i = 0; i < 3; i++){
-      calc2.Update(xx(i,_));
-    }
-    if (std::abs(calc2.GetLoss() - 4) < 1e-5){
-      passing[2] = TRUE;
-    }
-    
-    LossCalculator calc3(3);
-    xx = MakeMatrix(3);
-    for (int i = 0; i < 3; i++){
-      calc3.Update(xx(i,_));
-    }
-    if (calc3.GetLoss() == 0){
-      passing[3] = TRUE;
-    }
-    
-    return ErrorReport("LossCalculator", passing);
-  }
-  
-  catch (...){
-    return ErrorReport("LossCalculator", passing);
-  }
-}
-
-// [[Rcpp::export]]
-
 int test_ObjectiveCalculator() {
   NumericMatrix xx;
-  LogicalVector passing(5);
+  LogicalVector passing(6);
   try {
     
     ObjectiveCalculator calc0(3, 10.);
@@ -111,7 +58,6 @@ int test_ObjectiveCalculator() {
     if (std::abs(calc0.GetObjective() - 16) < 1e-5){
       passing[0] = TRUE;
     }
-    
     
     ObjectiveCalculator calc1(3, 10.);
     xx = MakeMatrix(1);
@@ -150,6 +96,16 @@ int test_ObjectiveCalculator() {
       passing[4] = TRUE;
     }
     
+    ObjectiveCalculator calc5(calc0);
+    xx = MakeMatrix(0);
+    for (int i = 0; i < 3; i++){
+      calc5.Update(xx(i,_));
+    }
+    if (std::abs(calc5.GetObjective() - 22) < 1e-5 and 
+          std::abs(calc0.GetObjective() - 16) < 1e-5){
+      passing[5] = TRUE;
+    }
+    
     return ErrorReport("ObjectiveCalculator", passing);
   }
   
@@ -159,6 +115,5 @@ int test_ObjectiveCalculator() {
 }
 
 /*** R
-test_LossCalculator()
 test_ObjectiveCalculator()
 */

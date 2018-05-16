@@ -13,10 +13,6 @@ DetectBreakpoints <- function(values, lambda) {
     .Call(`_proteoformR_DetectBreakpoints`, values, lambda)
 }
 
-test_LossCalculator <- function() {
-    .Call(`_proteoformR_test_LossCalculator`)
-}
-
 test_ObjectiveCalculator <- function() {
     .Call(`_proteoformR_test_ObjectiveCalculator`)
 }
