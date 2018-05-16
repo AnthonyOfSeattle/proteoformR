@@ -10,28 +10,29 @@ IntegerVector DetectBreakpoints(NumericMatrix values,
   BreakpointDetector detector(values,
                               lambda);
   model = detector.Fit();
-  return model;
+  return IntegerVector(1);//model;
 }
 
 
 /*** R
-# No breakpoints
-  continuous = matrix(rnorm(100,0, 1), ncol = 1)
-  print(DetectBreakpoints(continuous, lambda = 7))
+# # No breakpoints
+# continuous = matrix(rnorm(10,0, 1), ncol = 1)
+# print(DetectBreakpoints(continuous, lambda = 7))
+# print(sum((continuous - mean(continuous))^2))
 
-# One breakpoint
-continuous = matrix(c(rnorm(100,-.5, .5), rnorm(100,0.5, .5)), ncol = 1)
-print(DetectBreakpoints(continuous, lambda = 7))
+# # One breakpoint
+# continuous = matrix(c(rnorm(10,-.5, .5), rnorm(10,0.5, .5)), ncol = 1)
+# print(DetectBreakpoints(continuous, lambda = 5))
 
-# Two breakpoint
-continuous = cbind(matrix(c(rnorm(100,-.5, .5), 
-                            rnorm(100,0.5, .5), 
-                            rnorm(100,-0.5, .5)), ncol = 1))
-print(DetectBreakpoints(continuous, lambda = 7))
-
-# Outlier
-continuous = cbind(rnorm(100,0, .5), rnorm(100,0, .5))
-continuous[50, ] = continuous[50,] + 3
-print(DetectBreakpoints(continuous, lambda = 7))
+# # Two breakpoint
+# continuous = cbind(matrix(c(rnorm(100,-.5, .5), 
+#                             rnorm(100,0.5, .5), 
+#                             rnorm(100,-0.5, .5)), ncol = 1))
+# print(DetectBreakpoints(continuous, lambda = 7))
+# 
+#Outlier
+continuous = cbind(rnorm(10,0, .5), rnorm(10,0, .5))
+continuous[5, ] = continuous[5,] + 3
+print(DetectBreakpoints(continuous, lambda = 10))
 
 */
