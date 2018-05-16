@@ -6,22 +6,26 @@
 using namespace Rcpp;
 
 class DynamicContainer{
-  double objective_save;
+  int true_position_;
   ObjectiveCalculator* objective_main_;
-  ObjectiveCalculator* objective_hold_;
-  IntegerVector breakpoints_;
-  IntegerVector held_positions_;
-  bool isBuffered;
+  DynamicContainer* last_break_;
+  double penalty_;
+  bool is_held_;
 public:
-  DynamicContainer(int, double);
-  DynamicContainer(const DynamicContainer&);
-  ~DynamicContainer();
+  DynamicContainer(int, double, double);
+  DynamicContainer(DynamicContainer&);
+
+  void SetPos(int);
+  int GetPos();
+  
   void Update(NumericMatrix::Row);
-  void HoldOut(NumericMatrix::Row);
-  void SaveObjective(double);
   double GetObjective();
-  IntegerVector GetBreakpoints();
-  IntegerVector GetHold();
+  void Reset();
+  
+  DynamicContainer* GetLastBreak();
+  
+  void Hold();
+  bool isHeld();
 };
 
 
