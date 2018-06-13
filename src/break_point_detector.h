@@ -13,6 +13,7 @@ class BreakpointDetector{
 public:
   BreakpointDetector(NumericMatrix , double);
   void FindMinimum(int);
+  IntegerVector GetBreakpointVector();
   IntegerVector Fit();
 };
 

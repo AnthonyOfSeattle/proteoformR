@@ -9,14 +9,12 @@ DynamicContainer::DynamicContainer(int nsamples,
   objective_main_ -> SetObjective(objective);
   last_break_ = this;
   penalty_ = penalty;
-  is_held_ = false;
 }
 
 DynamicContainer::DynamicContainer(DynamicContainer& prev){
   objective_main_ = new ObjectiveCalculator(*prev.objective_main_);
   last_break_ = &prev;
   penalty_ = prev.penalty_;
-  is_held_ = false;
 }
 
 void DynamicContainer::SetPos(int pos){
@@ -33,9 +31,6 @@ void DynamicContainer::Update(NumericMatrix::Row values){
 
 double DynamicContainer::GetObjective(){
   double objective = objective_main_ -> GetObjective();
-  if(is_held_){
-    objective += penalty_;
-    }
   return objective;
 }
 
@@ -46,12 +41,4 @@ void DynamicContainer::Reset(){
 
 DynamicContainer* DynamicContainer::GetLastBreak(){
   return last_break_;
-}
-
-void DynamicContainer::Hold(){
-  is_held_ = true;
-}
-
-bool DynamicContainer::isHeld(){
-  return is_held_;
 }

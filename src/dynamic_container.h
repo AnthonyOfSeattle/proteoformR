@@ -10,7 +10,6 @@ class DynamicContainer{
   ObjectiveCalculator* objective_main_;
   DynamicContainer* last_break_;
   double penalty_;
-  bool is_held_;
 public:
   DynamicContainer(int, double, double);
   DynamicContainer(DynamicContainer&);
@@ -23,9 +22,6 @@ public:
   void Reset();
   
   DynamicContainer* GetLastBreak();
-  
-  void Hold();
-  bool isHeld();
 };
 
 
