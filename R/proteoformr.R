@@ -68,9 +68,8 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     for (r in unique(spread_data$ref)){
       data.subset = spread_data %>% 
         filter(ref == r)
-      breakpoint.subset = FitBreakPoints(reference = data.subset$ref,
-                                         val = as.matrix(data.subset[,-(1:3)]),
-                                         lambda)
+      breakpoint.subset = DetectBreakpoints(val = as.matrix(data.subset[,-(1:3)]),
+                                            lambda)
       breakpoints = c(breakpoints, breakpoint.subset + startpoint) 
       startpoint = startpoint + dim(data.subset)[1]
     }

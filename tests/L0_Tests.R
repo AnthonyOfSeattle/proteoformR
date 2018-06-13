@@ -21,14 +21,9 @@ CleanedData <- TurnoverData %>%
   spread(Replicate, med)
 CleanedData <- CleanedData[with(CleanedData, order(Reference, Start)),]
 
-fit <- FitBreakPoints(reference = CleanedData$Reference,
-                      val = as.matrix(CleanedData[,-(1:2)]),
-                      lambda = 8)
+fit <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
+                         lambda = 8)
 fit
-
-fit2 <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
-                          lambda = 8)
-fit2
 
 TMData <- read.csv("./tests/TMSamples.csv")
 CleanedData <- TMData %>%
@@ -41,11 +36,6 @@ CleanedData <- TMData %>%
   spread("replicate", "med")
 CleanedData <- CleanedData[with(CleanedData, order(protein_name, start_pos)),]
 
-fit <- FitBreakPoints(reference = CleanedData$protein_name,
-                      val = as.matrix(CleanedData[,-(1:2)]),
-                      lambda = 8)
+fit <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
+                         lambda = 8)
 fit
-
-fit2 <- DetectBreakpoints(val = as.matrix(CleanedData[,-(1:2)]),
-                          lambda = 8)
-fit2
