@@ -13,6 +13,10 @@ DetectBreakpoints <- function(values, lambda) {
     .Call(`_proteoformR_DetectBreakpoints`, values, lambda)
 }
 
+FitModel <- function(values, breakpoints) {
+    .Call(`_proteoformR_FitModel`, values, breakpoints)
+}
+
 test_ObjectiveCalculator <- function() {
     .Call(`_proteoformR_test_ObjectiveCalculator`)
 }
