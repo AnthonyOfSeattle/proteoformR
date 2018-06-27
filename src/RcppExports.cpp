@@ -5,38 +5,45 @@
 
 using namespace Rcpp;
 
-// FitBreakPoints
-IntegerVector FitBreakPoints(StringVector references, NumericMatrix values, double lambda, StringVector method);
-RcppExport SEXP _proteoformR_FitBreakPoints(SEXP referencesSEXP, SEXP valuesSEXP, SEXP lambdaSEXP, SEXP methodSEXP) {
+// DetectBreakpoints
+IntegerVector DetectBreakpoints(NumericMatrix values, double lambda);
+RcppExport SEXP _proteoformR_DetectBreakpoints(SEXP valuesSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< StringVector >::type references(referencesSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type values(valuesSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< StringVector >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(FitBreakPoints(references, values, lambda, method));
+    rcpp_result_gen = Rcpp::wrap(DetectBreakpoints(values, lambda));
     return rcpp_result_gen;
 END_RCPP
 }
-// BuildModel
-NumericVector BuildModel(StringVector references, NumericMatrix values, IntegerVector breakpoints, StringVector method);
-RcppExport SEXP _proteoformR_BuildModel(SEXP referencesSEXP, SEXP valuesSEXP, SEXP breakpointsSEXP, SEXP methodSEXP) {
+// FitModel
+NumericVector FitModel(NumericMatrix values, IntegerVector breakpoints);
+RcppExport SEXP _proteoformR_FitModel(SEXP valuesSEXP, SEXP breakpointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< StringVector >::type references(referencesSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type values(valuesSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type breakpoints(breakpointsSEXP);
-    Rcpp::traits::input_parameter< StringVector >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(BuildModel(references, values, breakpoints, method));
+    rcpp_result_gen = Rcpp::wrap(FitModel(values, breakpoints));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_ObjectiveCalculator
+int test_ObjectiveCalculator();
+RcppExport SEXP _proteoformR_test_ObjectiveCalculator() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_ObjectiveCalculator());
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_proteoformR_FitBreakPoints", (DL_FUNC) &_proteoformR_FitBreakPoints, 4},
-    {"_proteoformR_BuildModel", (DL_FUNC) &_proteoformR_BuildModel, 4},
+    {"_proteoformR_DetectBreakpoints", (DL_FUNC) &_proteoformR_DetectBreakpoints, 2},
+    {"_proteoformR_FitModel", (DL_FUNC) &_proteoformR_FitModel, 2},
+    {"_proteoformR_test_ObjectiveCalculator", (DL_FUNC) &_proteoformR_test_ObjectiveCalculator, 0},
     {NULL, NULL, 0}
 };
 

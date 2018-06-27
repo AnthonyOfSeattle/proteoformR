@@ -12,12 +12,11 @@
 #' @param end Ending position for each peptide
 #' @param batch Batching information. In most cases this will be the sample number for each measurement.
 #' @param lambda Penalty term to apply to each L0 optimization.
-#' @param method Deprecated, will likely be reformatted later
 #' @return An S3 object with class of type, "bpmodel", which contains the manipulated input, 
 #' a dataframe of breakpoints, and a predicted best model. 
 
 proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch = NULL,
-                        lambda = 10, method = "PL_L0"){
+                        lambda = 10){
   
   # In order to call breakpoints we really only need sequential values
   # so the only required arguments are: data, vals
@@ -62,21 +61,19 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   
   model <- list("Input" = spread_data)
   
-  if (method == "PL_L0"){
-    startpoint = 0
-    breakpoints = c()
-    for (r in unique(spread_data$ref)){
-      data.subset = spread_data %>% 
-        filter(ref == r)
-      breakpoint.subset = FitBreakPoints(reference = data.subset$ref,
-                                         val = as.matrix(data.subset[,-(1:3)]),
-                                         lambda)
-      breakpoints = c(breakpoints, breakpoint.subset + startpoint) 
-      startpoint = startpoint + dim(data.subset)[1]
-    }
-    fit = BuildModel(reference = spread_data$ref,
-                     val = as.matrix(spread_data[,-(1:3)]),
-                     breakpoints = breakpoints)
+  startpoint = 0
+  breakpoints = c()
+  fit = c()
+  for (r in unique(spread_data$ref)){
+    data.subset = spread_data %>% 
+      filter(ref == r)
+    breakpoint.subset = DetectBreakpoints(values = as.matrix(data.subset[,-(1:3)]),
+                                          lambda)
+    fit = c(fit, FitModel(values = as.matrix(data.subset[,-(1:3)]),
+                          breakpoints = breakpoint.subset))
+
+    breakpoints = c(breakpoints, breakpoint.subset + startpoint)
+    startpoint = startpoint + dim(data.subset)[1]
   }
   model[["BreakPoints"]] = spread_data[breakpoints, colnames(spread_data) %in% names(supplied_args)]
   model[["ModelFit"]] =  cbind(spread_data[,1:3], fit = fit)
@@ -136,5 +133,3 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   }
   return(new_data)
 }
-
-

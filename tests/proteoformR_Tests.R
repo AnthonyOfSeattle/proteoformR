@@ -11,7 +11,7 @@ fit <- proteoformR(data = TurnoverData,
             end = End,
             batch = Replicate,
             vals = Norm_Log2_HtoL_TO,
-            lambda = 8.5)
+            lambda = 10)
 fit
 plot(fit, "YLR167W")
 
@@ -24,7 +24,7 @@ fit2 <- proteoformR(data = SizeExcData,
             end = End,
             batch = Replicate,
             vals = LogInequality,
-            lambda = 8.5)
+            lambda = 10)
 fit2
 plot(fit2)
 
