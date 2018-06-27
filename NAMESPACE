@@ -5,6 +5,10 @@ exportPattern("^[^\\.]")
 
 # R essentials
 importFrom(Rcpp, evalCpp)
+importFrom(foreach,
+           foreach,
+           "%do%",
+           "%dopar%")
 
 # tidy
 importFrom(dplyr, 
