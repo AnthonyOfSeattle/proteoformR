@@ -6,5 +6,6 @@
 using namespace Rcpp;
 
 IntegerVector DetectBreakpoints(NumericMatrix, double);
+NumericVector FitModel(NumericMatrix, IntegerVector);
 
 #endif
