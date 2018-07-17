@@ -47,7 +47,7 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   # Data needs to be scaled to make sure penalty terms
   # can be applied uniformly
   scaled_data = averaged_data %>%
-    group_by(ref) %>%
+    group_by(ref, batch) %>%
     mutate(vals = scale(vals))
   
   # The breakpoint detection treats each batch as seperate,
