@@ -16,7 +16,14 @@
 #' a dataframe of breakpoints, and a predicted best model. 
 
 proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch = NULL,
-                        lambda = 10){
+                        lambda = 10, model_type = "reference"){
+  
+  # Only two model_type parameters are allowed:
+  # pooling means at the "reference" level
+  # pooling means at the "replicate" level
+  if (!(model_type %in% c("reference", "replicate"))){
+    stop("We only support the following parameters for model_type: 'reference' or 'replicate'")
+  }
   
   # In order to call breakpoints we really only need sequential values
   # so the only required arguments are: data, vals
@@ -68,7 +75,7 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     data.subset = spread_data %>% 
       filter(ref == r)
     breakpoint.subset = DetectBreakpoints(values = as.matrix(data.subset[,-(1:3)]),
-                                          lambda)
+                                          lambda, model_type)
     fit = c(fit, FitModel(values = as.matrix(data.subset[,-(1:3)]),
                           breakpoints = breakpoint.subset))
 

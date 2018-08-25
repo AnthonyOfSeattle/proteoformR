@@ -2,6 +2,7 @@
 #define OBJECTIVE_CALCULATOR_H
 
 #include <Rcpp.h>
+#include <string>
 using namespace Rcpp;
 
 /* Container to store and calculate objective over
@@ -18,8 +19,9 @@ class ObjectiveCalculator{
   NumericVector moment_two_;
   double objective_;
   double penalty_;
+  bool pool_mean_;
 public:
-  ObjectiveCalculator(int, double);
+  ObjectiveCalculator(int, double, std::string);
   ObjectiveCalculator(const ObjectiveCalculator&);
   void ZeroAccumulators();
   void SetObjective(double);

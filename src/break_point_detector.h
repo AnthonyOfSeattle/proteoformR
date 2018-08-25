@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include <vector>
+#include <string>
 #include "dynamic_container.h"
 using namespace Rcpp;
 
@@ -11,7 +12,7 @@ class BreakpointDetector{
   NumericMatrix values_;
   double penalty_;
 public:
-  BreakpointDetector(NumericMatrix , double);
+  BreakpointDetector(NumericMatrix , double, std::string);
   void FindMinimum(int);
   IntegerVector GetBreakpointVector();
   IntegerVector Fit();

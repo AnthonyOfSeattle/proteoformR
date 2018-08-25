@@ -50,7 +50,7 @@ int test_ObjectiveCalculator() {
   LogicalVector passing(6);
   try {
     
-    ObjectiveCalculator calc0(3, 10.);
+    ObjectiveCalculator calc0(3, 10., "reference");
     xx = MakeMatrix(0);
     for (int i = 0; i < 3; i++){
       calc0.Update(xx(i,_));
@@ -59,16 +59,16 @@ int test_ObjectiveCalculator() {
       passing[0] = TRUE;
     }
     
-    ObjectiveCalculator calc1(3, 10.);
+    ObjectiveCalculator calc1(3, 10., "reference");
     xx = MakeMatrix(1);
     for (int i = 0; i < 3; i++){
       calc1.Update(xx(i,_));
     }
-    if (std::abs(calc1.GetObjective() - 13) < 1e-5){
+    if (std::abs(calc1.GetObjective() - 14) < 1e-5){
       passing[1] = TRUE;
     }
     
-    ObjectiveCalculator calc2(3, 10);
+    ObjectiveCalculator calc2(3, 10., "reference");
     xx = MakeMatrix(2);
     for (int i = 0; i < 3; i++){
       calc2.Update(xx(i,_));
@@ -77,7 +77,7 @@ int test_ObjectiveCalculator() {
       passing[2] = TRUE;
     }
     
-    ObjectiveCalculator calc3(3, 10.);
+    ObjectiveCalculator calc3(3, 10., "reference");
     xx = MakeMatrix(3);
     for (int i = 0; i < 3; i++){
       calc3.Update(xx(i,_));
@@ -86,7 +86,7 @@ int test_ObjectiveCalculator() {
       passing[3] = TRUE;
     }
     
-    ObjectiveCalculator calc4(3, 10.);
+    ObjectiveCalculator calc4(3, 10., "reference");
     calc4.SetObjective(20.);
     xx = MakeMatrix(0);
     for (int i = 0; i < 3; i++){

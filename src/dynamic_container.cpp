@@ -4,8 +4,9 @@ using namespace Rcpp;
 
 DynamicContainer::DynamicContainer(int nsamples,
                                    double penalty,
-                                   double objective = 0.){
-  objective_main_ = new ObjectiveCalculator(nsamples, penalty);
+                                   double objective,
+                                   std::string model_type){
+  objective_main_ = new ObjectiveCalculator(nsamples, penalty, model_type);
   objective_main_ -> SetObjective(objective);
   last_break_ = this;
   penalty_ = penalty;

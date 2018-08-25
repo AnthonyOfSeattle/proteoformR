@@ -1,14 +1,17 @@
 #include <Rcpp.h>
+#include <string>
 #include "r_interface.h"
 using namespace Rcpp;
 
 // [[Rcpp::export]]
 
 IntegerVector DetectBreakpoints(NumericMatrix values,
-                                double lambda){
+                                double lambda, 
+                                std::string model_type = "reference"){
   IntegerVector model;
   BreakpointDetector detector(values,
-                              lambda);
+                              lambda,
+                              model_type);
   model = detector.Fit();
   return model;
 }
