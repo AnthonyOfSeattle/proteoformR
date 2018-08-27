@@ -4,7 +4,8 @@
 \alias{plot.bpmodel}
 \title{View all or a subset of breakpoint models}
 \usage{
-\method{plot}{bpmodel}(model, ref = NULL, dir = NULL, only.calls = FALSE)
+\method{plot}{bpmodel}(model, ref = NULL, dir = NULL,
+  only.calls = FALSE)
 }
 \arguments{
 \item{model}{S3 object supplied by running proteoformR}

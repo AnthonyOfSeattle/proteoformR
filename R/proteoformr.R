@@ -2,8 +2,7 @@
 #' 
 #' \code{proteoformR} uses a Rcpp dynamic programming backend to solve an L0 penalized changepoint model for each protein. 
 #' For the best performance, each sample should be treated as a batch, but the only required arguments are data and vals; 
-#' all other arguments are suggestions and will only be used if supplied. This function performs sorting and sclaing internally,
-#' so don't worry about preprocessing data.
+#' all other arguments are suggestions and will only be used if supplied. This function performs sorting and scaling internally.
 #' 
 #' @param data A dataframe in tidy format containing at least one column of continuous values
 #' @param vals Column name for values within data
@@ -11,17 +10,26 @@
 #' @param start Start position for each peptide
 #' @param end Ending position for each peptide
 #' @param batch Batching information. In most cases this will be the sample number for each measurement.
-#' @param lambda Penalty term to apply to each L0 optimization.
+#' @param lambda Penalty term to apply to each L0 optimization. Must be one of 'bic', 'aic', or a numeric value
+#' @param model_type Specify whether model shares mean shifts between replicates or allows each replicate
+#' to have its own mean shift while maintaining common breakpoints.
 #' @return An S3 object with class of type, "bpmodel", which contains the manipulated input, 
 #' a dataframe of breakpoints, and a predicted best model. 
 
 proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch = NULL,
-                        lambda = 10){
+                        lambda = "bic", model_type = "reference"){
   
   # In order to call breakpoints we really only need sequential values
   # so the only required arguments are: data, vals
   if (missing(data) | missing(vals)){
     stop("Please supply both data and a reference to the values column")
+  }
+  
+  # Only two model_type parameters are allowed:
+  # mean shifts at the "reference" level
+  # mean shifts at the "replicate" level
+  if (!(model_type %in% c("reference", "replicate"))){
+    stop("model_type must be one of: 'reference' or 'replicate'")
   }
   
   # Arguments don't need to be supplied as string "arg"
@@ -57,8 +65,11 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     spread(batch, vals) %>%
     arrange(ref, start, end) %>%
     filter( sum(!(is.na(.[,-(1:3)]))) > 0 )
-    
   
+  # Now that we know we have data and have a model specified, 
+  # we can reinterpret the penalty in terms of the final dimensions
+  lambda = .interpret.lambda(lambda, dim(spread_data[,-(1:3)]), model_type)
+    
   model <- list("Input" = spread_data)
   
   startpoint = 0
@@ -68,7 +79,7 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
     data.subset = spread_data %>% 
       filter(ref == r)
     breakpoint.subset = DetectBreakpoints(values = as.matrix(data.subset[,-(1:3)]),
-                                          lambda)
+                                          lambda, model_type)
     fit = c(fit, FitModel(values = as.matrix(data.subset[,-(1:3)]),
                           breakpoints = breakpoint.subset))
 
@@ -80,6 +91,35 @@ proteoformR <- function(data, vals, ref = NULL, start = NULL, end = NULL, batch 
   
   class(model) = "bpmodel"
   return(model)
+}
+
+# Utility function to specify penalty term for breakpoint algorithm
+.interpret.lambda <- function(lambda, data_dim, model_type){
+  if (is.numeric(lambda)){
+    # User specified penalties should be used unaltered
+    return(lambda)
+  } else if (lambda == "bic"){
+    
+    # The bic penalty is (# of params) * log(# of potential_breakpoints)
+    # where potential_breakpoints can be read as "peptides"
+    if (model_type == "reference"){
+      return(log(data_dim[1]))
+    } else if (model_type == "replicate"){
+      return(data_dim[2] * log(data_dim[1]))
+    }
+    
+  } else if (lambda == "aic"){
+    
+    # The aic penalty is (# of params)
+    if (model_type == "reference"){
+      return(1.)
+    } else if (model_type == "replicate"){
+      return(data_dim[2])
+    }
+    
+  } else {
+    stop("lambda must be one of 'bic', 'aic', or a numeric value")
+  }
 }
 
 # Utility function to tranform an input to proteoformr into a usable dataframe

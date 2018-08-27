@@ -5,7 +5,7 @@
 \title{Build a breakpoint model for each reference in a tidy format dataframe.}
 \usage{
 proteoformR(data, vals, ref = NULL, start = NULL, end = NULL,
-  batch = NULL, lambda = 10, method = "PL_L0")
+  batch = NULL, lambda = "bic", model_type = "reference")
 }
 \arguments{
 \item{data}{A dataframe in tidy format containing at least one column of continuous values}
@@ -20,9 +20,10 @@ proteoformR(data, vals, ref = NULL, start = NULL, end = NULL,
 
 \item{batch}{Batching information. In most cases this will be the sample number for each measurement.}
 
-\item{lambda}{Penalty term to apply to each L0 optimization.}
+\item{lambda}{Penalty term to apply to each L0 optimization. Must be one of 'bic', 'aic', or a numeric value}
 
-\item{method}{Deprecated, will likely be reformatted later}
+\item{model_type}{Specify whether model shares mean shifts between replicates or allows each replicate
+to have its own mean shift while maintaining common breakpoints.}
 }
 \value{
 An S3 object with class of type, "bpmodel", which contains the manipulated input, 
@@ -31,6 +32,5 @@ a dataframe of breakpoints, and a predicted best model.
 \description{
 \code{proteoformR} uses a Rcpp dynamic programming backend to solve an L0 penalized changepoint model for each protein. 
 For the best performance, each sample should be treated as a batch, but the only required arguments are data and vals; 
-all other arguments are suggestions and will only be used if supplied. This function performs sorting and sclaing internally,
-so don't worry about preprocessing data.
+all other arguments are suggestions and will only be used if supplied. This function performs sorting and scaling internally.
 }

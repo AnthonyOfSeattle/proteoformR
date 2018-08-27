@@ -6,14 +6,15 @@
 using namespace Rcpp;
 
 // DetectBreakpoints
-IntegerVector DetectBreakpoints(NumericMatrix values, double lambda);
-RcppExport SEXP _proteoformR_DetectBreakpoints(SEXP valuesSEXP, SEXP lambdaSEXP) {
+IntegerVector DetectBreakpoints(NumericMatrix values, double lambda, std::string model_type);
+RcppExport SEXP _proteoformR_DetectBreakpoints(SEXP valuesSEXP, SEXP lambdaSEXP, SEXP model_typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type values(valuesSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
-    rcpp_result_gen = Rcpp::wrap(DetectBreakpoints(values, lambda));
+    Rcpp::traits::input_parameter< std::string >::type model_type(model_typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(DetectBreakpoints(values, lambda, model_type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -41,7 +42,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_proteoformR_DetectBreakpoints", (DL_FUNC) &_proteoformR_DetectBreakpoints, 2},
+    {"_proteoformR_DetectBreakpoints", (DL_FUNC) &_proteoformR_DetectBreakpoints, 3},
     {"_proteoformR_FitModel", (DL_FUNC) &_proteoformR_FitModel, 2},
     {"_proteoformR_test_ObjectiveCalculator", (DL_FUNC) &_proteoformR_test_ObjectiveCalculator, 0},
     {NULL, NULL, 0}

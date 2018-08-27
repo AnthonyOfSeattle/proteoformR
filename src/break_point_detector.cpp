@@ -1,9 +1,10 @@
 #include <Rcpp.h>
+#include <string>
 #include "break_point_detector.h"
 #include "dynamic_container.h"
 using namespace Rcpp;
 
-BreakpointDetector::BreakpointDetector(NumericMatrix values, double lambda){
+BreakpointDetector::BreakpointDetector(NumericMatrix values, double lambda, std::string model_type){
   values_ = values;
   penalty_ = lambda;
   // Only the first dynamic container in the list is initialized,
@@ -11,7 +12,7 @@ BreakpointDetector::BreakpointDetector(NumericMatrix values, double lambda){
   // The initial container must also have an objective set to -lambda,
   // since this is the only "breakpoint" in the lookup table which
   // we do not want to penalize.
-  DynamicContainer *temp = new DynamicContainer(values.cols(), lambda, -lambda);
+  DynamicContainer *temp = new DynamicContainer(values.cols(), lambda, -lambda, model_type);
   temp -> SetPos(0);
   lookup_table_.push_back(temp);
 }
