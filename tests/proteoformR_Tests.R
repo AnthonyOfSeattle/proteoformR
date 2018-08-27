@@ -10,8 +10,7 @@ fit <- proteoformR(data = TurnoverData,
             start = Start,
             end = End,
             batch = Replicate,
-            vals = Norm_Log2_HtoL_TO,
-            lambda = log(length(unique(TurnoverData$Start))))
+            vals = Norm_Log2_HtoL_TO)
 fit
 plot(fit, "YLR167W")
 
@@ -23,8 +22,7 @@ fit2 <- proteoformR(data = SizeExcData,
             start = Start,
             end = End,
             batch = Replicate,
-            vals = LogInequality,
-            lambda = log(length(unique(SizeExcData$Start))))
+            vals = LogInequality)
 fit2
 plot(fit2)
 
@@ -35,8 +33,7 @@ fit3 <- proteoformR(data = TMData,
             start = start_pos,
             end = end_pos,
             batch = replicate,
-            vals = meltPoint,
-            lambda = log(length(unique(TMData$start_pos))))
+            vals = meltPoint)
 fit3
 plot(fit3, "YER069W")
 
